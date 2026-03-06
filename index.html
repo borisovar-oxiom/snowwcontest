@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Рейтинги — SnowContest</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>UFA SnoWW Contest 2026</h1>
+      <nav>
+        <a href="index.html" class="active">Рейтинги</a>
+        <a href="admin.html">Админ</a>
+      </nav>
+    </header>
+
+    <div id="tabsToolbar" class="toolbar" style="margin-bottom: 1rem;">
+      <button type="button" data-tab="qualification">Квалификация</button>
+      <button type="button" data-tab="pairs" class="secondary" style="display: none;">Пары H2H</button>
+      <button type="button" data-tab="stage1" class="secondary" style="display: none;">Рейтинг снежного этапа (R1)</button>
+      <button type="button" data-tab="heats" class="secondary" style="display: none;">Хиты и туры</button>
+      <button type="button" data-tab="final" class="secondary" style="display: none;">Итоговый рейтинг</button>
+    </div>
+
+    <div id="noResults" class="no-data section" style="display: none;">
+      Нет опубликованных данных. Заполните участников и нажмите «Опубликовать» на странице <a href="admin.html">Админ</a>.
+    </div>
+
+    <div id="tab-qualification" class="tab-panel" style="display: none;">
+      <section class="section">
+        <h2>Протокол квалификации</h2>
+        <p style="color: var(--muted); font-size: 0.9rem;">Место и очки за квалификацию (N, N−1, …, 1). НФ — не финишировал.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Место</th>
+              <th>Участник</th>
+              <th data-club-header>Клуб</th>
+              <th>Класс</th>
+              <th>Красная (с)</th>
+              <th>Зелёная (с)</th>
+              <th>Общее время (с)</th>
+              <th>Очки</th>
+            </tr>
+          </thead>
+          <tbody id="qualTable"></tbody>
+        </table>
+      </section>
+    </div>
+
+    <div id="tab-stage1" class="tab-panel" style="display: none;">
+      <section class="section">
+        <h2>Рейтинг Снежного этапа (R1 = Rквал + Rh2h)</h2>
+        <p style="color: var(--muted); font-size: 0.9rem;">Очки квалификации + очки параллельных спусков (победа 2, поражение 1, НФ 0).</p>
+        <table>
+          <thead>
+              <tr>
+                  <th>Место</th>
+                  <th>Участник</th>
+                  <th data-club-header>Клуб</th>
+                  <th>Класс</th>
+                  <th>Очки квал.</th>
+                  <th>Победы H2H</th>
+                  <th>Очки H2H</th>
+                  <th>Итог этапа</th>
+              </tr>
+          </thead>
+          <tbody id="stage1Table"></tbody>
+        </table>
+      </section>
+    </div>
+
+    <div id="tab-pairs" class="tab-panel" style="display: none;">
+      <section class="section">
+        <h2>Пары параллельных спусков</h2>
+        <p style="color: var(--muted); font-size: 0.9rem;">Формируются на основе мест в квалификации по принципу «сильный с сильным». НФ — не финишировал.</p>
+        <div class="table-parallel-pairs-wrap">
+        <table class="table-parallel-pairs">
+          <thead>
+            <tr>
+              <th>Очки</th>
+              <th>Попытка 1</th>
+              <th>Попытка 2 (смена трасс)</th>
+            </tr>
+          </thead>
+          <tbody id="pairsTable"></tbody>
+        </table>
+        </div>
+      </section>
+    </div>
+
+    <div id="tab-heats" class="tab-panel" style="display: none;">
+      <section class="section">
+        <h2>Хиты и туры кросса</h2>
+        <p style="color: var(--muted); font-size: 0.9rem;">Сетка хитов по классам и все туры (система с двойным поражением). Участники в заездах — по рейтингу R1 (змейка).</p>
+        <div id="heatsBlock" class="cross-heats-block"></div>
+      </section>
+    </div>
+
+    <div id="tab-final" class="tab-panel" style="display: none;">
+      <section class="section">
+        <h2>Итоговый рейтинг по классам</h2>
+        <p style="color: var(--muted); font-size: 0.9rem;">R = R1 + R2. R2 начисляется по месту в кроссе (N…1) внутри класса.</p>
+        <div id="finalByClass"></div>
+      </section>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="js/constants.js"></script>
+  <script src="js/contest-calculator.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/qualification-format.js"></script>
+  <script src="js/heats-shared.js"></script>
+  <script src="js/cross-logic.js"></script>
+  <script src="js/pair-render.js"></script>
+  <script src="js/admin-pairs.js"></script>
+  <script src="js/rating-tabs.js"></script>
+  <script src="js/rating-render.js"></script>
+  <script src="js/rating-init.js"></script>
+  <script>
+    window.SnowContestRatingInit.bindRatingEvents();
+    window.SnowContestRatingInit.initRatingPage();
+  </script>
+</body>
+</html>

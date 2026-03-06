@@ -1,0 +1,14 @@
+{
+  "name": "snowcontest-web",
+  "version": "1.0.0",
+  "description": "SnowContest Web — тесты",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.1",
+    "vitest": "^2.1.6"
+  }
+}

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Админ — SnowContest</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>SnowContest — Администрирование</h1>
+      <nav>
+        <a href="index.html">Рейтинги</a>
+        <a href="admin.html" class="active">Админ</a>
+      </nav>
+    </header>
+
+    <div id="msg" class="msg" style="display: none;"></div>
+
+    <section class="section">
+      <h2>Участники</h2>
+      <div class="form-row">
+        <label class="flex-1">
+          <span>Номер (уникальный)</span>
+          <input type="text" id="newId" placeholder="1">
+        </label>
+        <label class="flex-2">
+          <span>ФИО / имя</span>
+          <input type="text" id="newName" placeholder="Иван Петров">
+        </label>
+        <label class="flex-1">
+          <span>Класс</span>
+          <select id="newClass">
+            <option value="К1М">К1М — Каяк, мужчины</option>
+            <option value="К1Ж">К1Ж — Каяк, женщины</option>
+            <option value="П1М">П1М — Пакрафт, мужчины</option>
+            <option value="П1Ж">П1Ж — Пакрафт, женщины</option>
+          </select>
+        </label>
+        <button type="button" id="addAthlete">Добавить</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th data-sort-table="athletes" data-sort-key="id">Номер</th>
+            <th data-sort-table="athletes" data-sort-key="displayName">Участник</th>
+            <th data-sort-table="athletes" data-sort-key="boatClass">Класс</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="athletesBody"></tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>Квалификация (время в секундах)</h2>
+      <p class="muted" style="margin-bottom: 1rem; color: var(--muted); font-size: 0.9rem;">
+        Красная и зелёная трасса. При равенстве — повторный заезд по красной (redTieBreak). НФ указывается только символом «-», пустые поля нужно заполнить.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th data-sort-table="qualification" data-sort-key="id">Номер</th>
+            <th data-sort-table="qualification" data-sort-key="displayName">Участник</th>
+            <th data-sort-table="qualification" data-sort-key="redTrackSeconds">Красная</th>
+            <th data-sort-table="qualification" data-sort-key="greenTrackSeconds">Зелёная</th>
+            <th data-sort-table="qualification" data-sort-key="totalTime">Общее время</th>
+            <th class="tie-break-col" data-sort-table="qualification" data-sort-key="redTieBreakSeconds">Повтор красная</th>
+            <th data-sort-table="qualification" data-sort-key="place">Место</th>
+            <th data-sort-table="qualification" data-sort-key="qualificationPoints">Баллы</th>
+          </tr>
+        </thead>
+        <tbody id="qualBody"></tbody>
+      </table>
+      <div class="toolbar" style="margin-top: 1rem;">
+        <button type="button" id="generatePairs" class="btn-calculate">Рассчитать рейтинг и сформировать пары</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Параллельные спуски (h2h)</h2>
+      <p class="muted" style="margin-bottom: 1rem; color: var(--muted); font-size: 0.9rem;">
+          Пары формируются по общему протоколу квалификации: «сильный с сильным». В дисциплине 2 попытки: во второй попытке участники меняются трассами.
+          При нечётном числе добавляется соперник из организаторов для участника из середины протокола.
+          <br />
+          <br />
+          Клик по участнику: победа (2 очк.) → второе место (1 очк.) → НФ (0) → сброс
+      </p>
+      <div class="table-parallel-pairs-wrap">
+      <table class="table-parallel-pairs">
+        <thead>
+          <tr>
+            <th>Очки</th>
+            <th>Попытка 1</th>
+            <th>Попытка 2 (смена трасс)</th>
+          </tr>
+        </thead>
+        <tbody id="parallelPairsBody"></tbody>
+      </table>
+      </div>
+      <div class="toolbar" style="margin-top: 1rem;">
+        <button type="button" id="calculateStage1" class="btn-calculate">Рассчитать рейтинг ЭТАПА 1 и сформировать хиты для кросса</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Места в кроссе (этап 2)</h2>
+      <p class="muted" style="margin-bottom: 1rem; color: var(--muted); font-size: 0.9rem;">
+        До 16 участников в классе — система с двойным поражением; после 16 — модифицированная олимпийская система. Хиты формируются по классам; в одном заезде — участники с высоким и низким рейтингом (змейка по R1).
+      </p>
+      <h3 style="margin-bottom: 0.5rem; font-size: 1rem;">Хиты для кросса</h3>
+      <div id="crossHeatsBlock" class="cross-heats-block"></div>
+      <div class="toolbar" style="margin-top: 1rem;">
+        <button type="button" id="calculateFinal" class="btn-calculate">Рассчитать итоговый рейтинг</button>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <button type="button" id="loadSample" class="secondary">Загрузить пример</button>
+      <button type="button" id="clearAllData" class="secondary">Удалить все данные</button>
+    </div>
+
+  </div>
+
+  <button type="button" id="publishData" class="publish-side-btn">Опубликовать</button>
+
+  <script src="js/constants.js"></script>
+  <script src="js/contest-calculator.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/qualification-format.js"></script>
+  <script src="js/heats-shared.js"></script>
+  <script src="js/pair-render.js"></script>
+  <script src="js/admin-data.js"></script>
+  <script src="js/admin-sort.js"></script>
+  <script src="js/admin-qualification.js"></script>
+  <script src="js/admin-pairs.js"></script>
+  <script src="js/admin-render-athletes.js"></script>
+  <script src="js/admin-render-qualification.js"></script>
+  <script src="js/admin-render-pairs.js"></script>
+  <script src="js/admin-render-cross.js"></script>
+  <script src="js/admin-render.js"></script>
+  <script src="js/admin-publish.js"></script>
+  <script src="js/admin-init.js"></script>
+  <script>
+    window.SnowContestAdminInit.initAdminPage();
+  </script>
+</body>
+</html>
